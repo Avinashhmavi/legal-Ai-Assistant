@@ -1,4 +1,4 @@
-### 🚀 Legal AI Assistant
+### 🚀🧑‍⚖️ Legal AI Assistant
 
 Welcome to the **Legal AI Assistant** – your AI-powered legal team in a single application! This Streamlit-based web app is designed to revolutionize legal document analysis by leveraging multiple specialized AI agents. Whether you're a legal professional, a law firm, or an individual seeking quick legal insights, this tool is here to help.
 
@@ -99,7 +99,7 @@ Before running the application, ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/legal-ai-assistant.git
+   git clone https://github.com/Avinashhmavi/legal-Ai-Assistant.git
    cd legal-ai-assistant
    ```
 
