@@ -1,4 +1,4 @@
-### 🚀🧑‍⚖️ Legal AI Assistant
+## 🚀🧑‍⚖️ Legal AI Assistant
 
 Welcome to the **Legal AI Assistant** – your AI-powered legal team in a single application! This Streamlit-based web app is designed to revolutionize legal document analysis by leveraging multiple specialized AI agents. Whether you're a legal professional, a law firm, or an individual seeking quick legal insights, this tool is here to help.
 
@@ -14,7 +14,7 @@ Try out the **Legal AI Assistant** live! Click the link below to access the app:
 
 ## 🌟 Features
 
-### 🤖 AI Agent Team
+## 🤖 AI Agent Team
 
 Our application features a team of specialized AI agents, each with a unique role:
 
@@ -36,7 +36,7 @@ Our application features a team of specialized AI agents, each with a unique rol
    - Ensures comprehensive responses, properly sourced recommendations, and references to specific document parts.
    - Acts as the coordinator for all three agents.
 
-### 📊 Analysis Types
+## 📊 Analysis Types
 
 The application offers five distinct types of analysis, each tailored to specific legal needs:
 
