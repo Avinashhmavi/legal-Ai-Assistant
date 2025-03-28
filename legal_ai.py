@@ -11,11 +11,15 @@ client = Groq(api_key=GROQ_API_KEY)
 
 def extract_text_from_pdf(uploaded_file):
     """Extract text content from PDF file using pypdf"""
-    reader = PdfReader(io.BytesIO(uploaded_file.getvalue()))
-    text = ""
-    for page in reader.pages:
-        text += page.extract_text()
-    return text[:4000]  # Return first 4000 characters for demo
+    try:
+        reader = PdfReader(io.BytesIO(uploaded_file.getvalue()))
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text() or ""  # Handle None values
+        return text[:4000]  # Return first 4000 characters for demo
+    except Exception as e:
+        st.error(f"Error processing PDF: {str(e)}")
+        return ""
 
 def generate_response(prompt, context, agent_role):
     """Generate response using Groq's API with role-specific prompting"""
@@ -29,16 +33,19 @@ def generate_response(prompt, context, agent_role):
     }}[agent_role]
     """
     
-    response = client.chat.completions.create(
-        model="mixtral-8x7b-32768",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"Document context: {context}\n\nQuestion: {prompt}"}
-        ],
-        temperature=0.3,
-        max_tokens=1024
-    )
-    return response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.1-70b",  # Updated model
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"Document context: {context}\n\nQuestion: {prompt}"}
+            ],
+            temperature=0.3,
+            max_tokens=1024
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"Error in {agent_role} analysis: {str(e)}"
 
 # Streamlit UI
 st.title("⚖️ Legal AI Assistant")
@@ -53,7 +60,10 @@ with st.sidebar:
     if uploaded_file:
         with st.spinner("Processing document..."):
             context = extract_text_from_pdf(uploaded_file)
-            st.success("Document ready for analysis!")
+            if context:
+                st.success("Document ready for analysis!")
+            else:
+                st.warning("Failed to process document")
 
 # Main chat interface
 analysis_type = st.radio(
@@ -90,17 +100,14 @@ if prompt := st.chat_input("Ask your legal question..."):
     
     with st.chat_message("assistant"):
         with st.spinner(f"Consulting {analysis_type}..."):
-            try:
-                # Get active agents for the selected analysis type
-                active_agents = analysis_agents[analysis_type]
-                response = ""
-                
-                # Generate responses from each active agent
-                for agent in active_agents:
-                    agent_response = generate_response(prompt, context, agent)
-                    response += f"**{agent}:**\n{agent_response}\n\n"
-                
-                st.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
-            except Exception as e:
-                st.error(f"Error generating response: {str(e)}")
+            # Get active agents for the selected analysis type
+            active_agents = analysis_agents[analysis_type]
+            response = ""
+            
+            # Generate responses from each active agent
+            for agent in active_agents:
+                agent_response = generate_response(prompt, context, agent)
+                response += f"**{agent}:**\n{agent_response}\n\n"
+            
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
