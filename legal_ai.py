@@ -15,7 +15,9 @@ def extract_text_from_pdf(uploaded_file):
         reader = PdfReader(io.BytesIO(uploaded_file.getvalue()))
         text = ""
         for page in reader.pages:
-            text += page.extract_text() or ""  # Handle None values
+            extracted = page.extract_text()
+            if extracted:  # Handle None values
+                text += extracted
         return text[:4000]  # Return first 4000 characters for demo
     except Exception as e:
         st.error(f"Error processing PDF: {str(e)}")
@@ -35,7 +37,7 @@ def generate_response(prompt, context, agent_role):
     
     try:
         response = client.chat.completions.create(
-            model="llama-3.1-70b",  # Updated model
+            model="llama-3.3-70b-versatile",  # Updated to a current production model
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Document context: {context}\n\nQuestion: {prompt}"}
